@@ -10,7 +10,7 @@ import re
 import random
 
 # prepare logger and log file
-log_name = time.strftime('%Y-%m-%d_%Hh%Mm%Ss') + '_discord.log'
+log_name = './log/' + time.strftime('%Y-%m-%d_%Hh%Mm%Ss') + '_discord.log'
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename=log_name, encoding='utf-8', mode='w')
@@ -19,10 +19,11 @@ logger.addHandler(handler)
 
 # Load env variable from .env file
 load_dotenv()
-TOKEN = os.getenv('DISCORD_TOKEN')
 GUILD = os.getenv('DISCORD_GUILD')
 WELCOME_CHANNELS = ast.literal_eval(os.getenv('WELCOME_CHANNELS'))
 print(WELCOME_CHANNELS)
+with open('./TOKEN', 'r') as f:
+    TOKEN = f.readline().strip()
 
 # set intents to use (using default and setting members to true)
 intents = discord.Intents.default()
@@ -70,8 +71,10 @@ async def on_message(message):
     if message.author.id == 873584922084913152:
         return
 
-    if "loli" in message.content:
+    if re.search('(?i)loli', message.content):
         await channel.send(random.choice(messages["loli"]))
+    elif "loli" in message.content:
+        await channel.send('<@!>')
     elif "shota" in message.content:
         await channel.send(random.choice(messages["shota"]))
     elif "cul" in message.content:
