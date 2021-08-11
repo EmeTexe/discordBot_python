@@ -35,7 +35,7 @@ intents = discord.Intents.default()
 intents.members = True
 intents.typing = False
 
-prefix = '!'
+prefix = '159'
 
 bot = commands.Bot(command_prefix=prefix, intents=intents)
 
@@ -80,10 +80,8 @@ async def on_message(message):
 
     channel = message.channel
     if message.author == bot.user:
-        print(f'True for message:\n{message.content}')
         return
-    if message.content[0] == '!':
-        print(f'True\nmessage contains !')
+    if message.content[0:len(prefix)] == prefix:
         return
     else:
         print(f'False for message:\n{message.content}')
@@ -111,23 +109,37 @@ async def on_member_join(member):
     await channel.send(f'Bienvenue à toi <@!{member.id}>')
 
 
-@bot.command(name='loli')
+@bot.command(name='loli', help='Choisi une phrase à répondre en lien avec les lolis')
 async def answer_loli(ctx):
     await ctx.send(random.choice(messages["loli"]))
 
 
-@bot.command(name='shota')
+@bot.command(name='shota', help='Choisi une phrase à répondre en lien avec les shotas')
 async def answer_shota(ctx):
     await ctx.send(random.choice(messages["shota"]))
 
 
-@bot.command(name='cul')
+@bot.command(name='cul', help='Choisi une phrase à répondre en lien avec les culs')
 async def answer_cul(ctx):
     await ctx.send(random.choice(messages["cul"]))
 
 
-@bot.command(name='milf')
+@bot.command(name='milf', help='Choisi une phrase à répondre en lien avec les milfs')
 async def answer_milf(ctx):
     await ctx.send('Ara ara')
+
+
+@bot.command(name='obfuscate', help='Prend la phrase suivant la commande et met certaines lettres au hasard en majuscule ou minuscule.')
+async def obfuscate(ctx, *args):
+    s = " ".join(args[:])
+    answer = ''
+    for c in s:
+        r = random.random()
+        if r<0.5:
+            c = c.lower()
+        else:
+            c = c.upper()
+        answer += c
+    await ctx.send(answer)
 
 bot.run(TOKEN)
