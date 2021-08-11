@@ -1,5 +1,6 @@
 # main.py
 import os
+import sys
 
 import discord
 from dotenv import load_dotenv
@@ -11,6 +12,9 @@ import random
 
 # prepare logger and log file
 log_name = './log/' + time.strftime('%Y-%m-%d_%Hh%Mm%Ss') + '_discord.log'
+err_name = log_name + 'err'
+sys.stderr = open(err_name, 'w')
+
 logger = logging.getLogger('discord')
 logger.setLevel(logging.DEBUG)
 handler = logging.FileHandler(filename=log_name, encoding='utf-8', mode='w')
@@ -68,16 +72,14 @@ async def on_message(message):
     }
 
     channel = message.channel
-    if message.author.id == 873584922084913152:
+    if message.author == client.user:
         return
 
     if re.search('(?i)loli', message.content):
         await channel.send(random.choice(messages["loli"]))
-    elif "loli" in message.content:
-        await channel.send('<@!>')
-    elif "shota" in message.content:
+    elif re.search('(?i)shou?ta', message.content):
         await channel.send(random.choice(messages["shota"]))
-    elif "cul" in message.content:
+    elif re.search('(?i)cul', message.content):
         await channel.send(random.choice(messages["cul"]))
 
 
